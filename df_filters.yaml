@@ -1,0 +1,11 @@
+{
+  'player_filter' : ['web_name','first_name','team','element_type','now_cost','selected_by_percent','transfers_in',
+                     'transfers_out','form','event_points','total_points','bonus','points_per_game','value_season',
+                     'minutes','goals_scored','assists','ict_index','clean_sheets','saves'],
+  'teams_filter' : [ 'code', 'draw', 'form', 'id', 'loss', 'name', 'played', 'points',
+                     'position', 'short_name', 'strength', 'team_division', 'unavailable',
+                     'win', 'strength_overall_home', 'strength_overall_away',
+                     'strength_attack_home', 'strength_attack_away', 'strength_defence_home',
+                     'strength_defence_away', 'pulse_id' ],
+  'player_filter_short':['web_name','team','element_type','total_points','value_season']
+}
