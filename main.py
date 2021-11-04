@@ -72,6 +72,14 @@ def get_my_team(game_week=10, team_id=296501):
     return my_team
 
 
+def plot_data(my_team, x='total_points', y='now_cost'):
+    ax = sns.regplot(data=my_team, x=x, y=y, label='element_type')
+    print(my_team.columns)
+    for i in range(len(my_team)):
+        plt.text(x=my_team.total_points[i], y=my_team.now_cost[i], s=my_team.web_name[i])
+    plt.show()
+
+
 def main():
     # get data from FPL website
     players_df, player_types_df, teams_df = get_fpl_data()
@@ -99,12 +107,11 @@ def main():
     print(my_team[df_filters['player_filter_short']])
 
     # Plot
-    # sns.barplot(data=my_team, x="web_name", y="total_points")
-    ax = sns.regplot(data=my_team, x='total_points', y='now_cost', label='element_type', )
-    for i in range(len(my_team)):
-        plt.text(x=my_team.total_points[i], y=my_team.now_cost[i], s=my_team.web_name[i])
+    # plot_data(my_team)
+    main_df_forwards = main_df[main_df['element_type'].isin(['Forward'])]
+    # print(main_df_forwards.columns)
+    # plot_data(main_df_forwards)
 
-    plt.show()
 
 
 if __name__ == '__main__':
