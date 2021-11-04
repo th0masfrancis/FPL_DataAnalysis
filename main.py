@@ -42,6 +42,9 @@ def data_preprocessing(main_df, player_types_df, teams_df):
     main_df['points_per_game'] = main_df['points_per_game'].astype('float')
     main_df['value_season'] = main_df['value_season'].astype('float')
     main_df['ict_index'] = main_df['ict_index'].astype('float')
+
+    # remove players with total_points < 0
+    # main_df = main_df.loc[main_df['total_points'] > 0]
     # print(main_df.dtypes)
 
     return main_df
@@ -53,7 +56,7 @@ def data_preprocessing_my_team(my_fpl_team, main_df):
     # logs_df = pd.merge(logs_df, employees_df, how='left',
     #         left_on='EmployeeID', right_on='EmployeeID')
     my_fpl_team = pd.merge(my_fpl_team, main_df, how='left', left_on='element', right_on='id')
-    # Replace the internal id with webname
+    # Replace the internal id with web_name
     my_fpl_team['element'] = my_fpl_team.element.map(main_df.set_index('id').web_name)
 
     return my_fpl_team
@@ -96,7 +99,11 @@ def main():
     print(my_team[df_filters['player_filter_short']])
 
     # Plot
-    ax = sns.barplot(data=my_team, x="web_name", y="total_points")
+    # sns.barplot(data=my_team, x="web_name", y="total_points")
+    ax = sns.regplot(data=my_team, x='total_points', y='now_cost', label='element_type',)
+    for i in range(len(my_team)):
+        plt.text(x=my_team.total_points[i],y=my_team.now_cost[i],s=my_team.web_name[i])
+
     plt.show()
 
 
