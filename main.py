@@ -1,13 +1,17 @@
 import requests
 import yaml
 import pandas as pd
-
-pd.set_option('mode.chained_assignment', None)
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
 
+# setting options
+pd.set_option('mode.chained_assignment', None)
+sns.set()
+plt.figure()
 
-def get_FPL_data():
+
+def get_fpl_data():
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
         r = requests.get(config['fpl_url'])
@@ -43,31 +47,31 @@ def data_preprocessing(main_df, player_types_df, teams_df):
     return main_df
 
 
-def data_preprocessing_myFPLTeam(myFPLTeam, main_df):
-    myFPLTeam['position'] = myFPLTeam.element.map(main_df.set_index('id').element_type)
+def data_preprocessing_my_team(my_fpl_team, main_df):
+    my_fpl_team['position'] = my_fpl_team.element.map(main_df.set_index('id').element_type)
 
     # logs_df = pd.merge(logs_df, employees_df, how='left',
     #         left_on='EmployeeID', right_on='EmployeeID')
-    myFPLTeam = pd.merge(myFPLTeam, main_df, how='left', left_on='element', right_on='id')
+    my_fpl_team = pd.merge(my_fpl_team, main_df, how='left', left_on='element', right_on='id')
     # Replace the internal id with webname
-    myFPLTeam['element'] = myFPLTeam.element.map(main_df.set_index('id').web_name)
+    my_fpl_team['element'] = my_fpl_team.element.map(main_df.set_index('id').web_name)
 
-    return myFPLTeam
+    return my_fpl_team
 
 
-def get_myFPLTeam():
+def get_my_team():
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
         url = config['base'] + config['team_id'] + config['gameweek']
     r = requests.get(url)
     json = r.json()
-    myFPLTeam = pd.DataFrame(json['picks'])
-    return myFPLTeam
+    my_team = pd.DataFrame(json['picks'])
+    return my_team
 
 
 def main():
     # get data from FPL website
-    players_df, player_types_df, teams_df = get_FPL_data()
+    players_df, player_types_df, teams_df = get_fpl_data()
 
     # Load the filters that needs to be applied on FPL data, from df_filter.yaml
     df_filters = get_filters()
@@ -85,11 +89,15 @@ def main():
         2)
     print(position_group.sort_values('value_season', ascending=False))
 
-    myFPLTeam = get_myFPLTeam()
+    my_team = get_my_team()
 
     # Identify top 6 players in each element_type who provides maximum value
-    myFPLTeam = data_preprocessing_myFPLTeam(myFPLTeam, main_df)
-    print(myFPLTeam[df_filters['player_filter_short']])
+    my_team = data_preprocessing_my_team(my_team, main_df)
+    print(my_team[df_filters['player_filter_short']])
+
+    # Plot
+    ax = sns.barplot(data=my_team, x="web_name", y="total_points")
+    plt.show()
 
 
 if __name__ == '__main__':
