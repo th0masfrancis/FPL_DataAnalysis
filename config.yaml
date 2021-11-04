@@ -3,7 +3,8 @@
 {
   'fpl_url' : 'https://fantasy.premierleague.com/api/bootstrap-static/',
   'team_url' : 'https://fantasy.premierleague.com/api/entry/team_id/event/game_week/picks/',
-  'base':  'https://fantasy.premierleague.com/api/entry/',
-  'gameweek': '10/picks/',
-  'team_id' : '296501/event/'
+  'base':  'https://fantasy.premierleague.com/api/entry/teamid/event/gameweek/picks/',
+  'fixtures': 'https://fantasy.premierleague.com/api/fixtures/',
+  'player_info' : ' https://fantasy.premierleague.com/api/element-summary/{element_id}/',
+  'mini_league' : ' https://fantasy.premierleague.com/api/element-summary/{element_id}/'
 }

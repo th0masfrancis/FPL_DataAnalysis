@@ -53,8 +53,6 @@ def data_preprocessing(main_df, player_types_df, teams_df):
 def data_preprocessing_my_team(my_fpl_team, main_df):
     my_fpl_team['position'] = my_fpl_team.element.map(main_df.set_index('id').element_type)
 
-    # logs_df = pd.merge(logs_df, employees_df, how='left',
-    #         left_on='EmployeeID', right_on='EmployeeID')
     my_fpl_team = pd.merge(my_fpl_team, main_df, how='left', left_on='element', right_on='id')
     # Replace the internal id with web_name
     my_fpl_team['element'] = my_fpl_team.element.map(main_df.set_index('id').web_name)
@@ -62,10 +60,12 @@ def data_preprocessing_my_team(my_fpl_team, main_df):
     return my_fpl_team
 
 
-def get_my_team():
+def get_my_team(game_week=10, team_id=296501):
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
-        url = config['base'] + config['team_id'] + config['gameweek']
+
+    url = config['base'].replace("gameweek", str(game_week))
+    url = url.replace("teamid", str(team_id))
     r = requests.get(url)
     json = r.json()
     my_team = pd.DataFrame(json['picks'])
@@ -100,9 +100,9 @@ def main():
 
     # Plot
     # sns.barplot(data=my_team, x="web_name", y="total_points")
-    ax = sns.regplot(data=my_team, x='total_points', y='now_cost', label='element_type',)
+    ax = sns.regplot(data=my_team, x='total_points', y='now_cost', label='element_type', )
     for i in range(len(my_team)):
-        plt.text(x=my_team.total_points[i],y=my_team.now_cost[i],s=my_team.web_name[i])
+        plt.text(x=my_team.total_points[i], y=my_team.now_cost[i], s=my_team.web_name[i])
 
     plt.show()
 
