@@ -72,12 +72,19 @@ def get_my_team(game_week=10, team_id=296501):
     return my_team
 
 
-def plot_data(my_team, x='total_points', y='now_cost'):
+def plot_data(my_team, y='total_points', x='now_cost'):
     ax = sns.regplot(data=my_team, x=x, y=y, label='element_type')
     print(my_team.columns)
     for i in range(len(my_team)):
-        plt.text(x=my_team.total_points[i], y=my_team.now_cost[i], s=my_team.web_name[i])
+        plt.text(x=my_team.now_cost[i], y=my_team.total_points[i], s=my_team.web_name[i])
     plt.show()
+
+
+def get_player_type_df(all_players, player_type):
+    player_type_df = all_players[all_players['element_type'].isin([player_type])]
+    player_type_df = player_type_df[player_type_df['total_points'] > 0]
+    player_type_df = player_type_df.reset_index()
+    return player_type_df
 
 
 def main():
@@ -105,13 +112,22 @@ def main():
     # Identify top 6 players in each element_type who provides maximum value
     my_team = data_preprocessing_my_team(my_team, main_df)
     print(my_team[df_filters['player_filter_short']])
+    main_df_forwards = get_player_type_df(main_df, 'Forward')
+    main_df_midfielders = get_player_type_df(main_df, 'Midfielder')
+    main_df_defenders = get_player_type_df(main_df, 'Defender')
+    main_df_goalkeepers = get_player_type_df(main_df, 'Goalkeeper')
+
+    # Get player history
+    # Calculate average points and standard deviation
+
+
+
+
 
     # Plot
-    # plot_data(my_team)
-    main_df_forwards = main_df[main_df['element_type'].isin(['Forward'])]
-    # print(main_df_forwards.columns)
-    # plot_data(main_df_forwards)
 
+    # plot_data(my_team)
+    plot_data(main_df_midfielders)
 
 
 if __name__ == '__main__':
