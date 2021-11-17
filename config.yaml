@@ -1,11 +1,7 @@
-
-
-{
-  'fpl_url' : 'https://fantasy.premierleague.com/api/bootstrap-static/',
-  'team_url' : 'https://fantasy.premierleague.com/api/entry/team_id/event/game_week/picks/',
-  'base':  'https://fantasy.premierleague.com/api/entry/teamid/event/gameweek/picks/',
-  'fixtures': 'https://fantasy.premierleague.com/api/fixtures/',
-  'player_info' : ' https://fantasy.premierleague.com/api/element-summary/{element_id}/',
-  'mini_league' : ' https://fantasy.premierleague.com/api/element-summary/{element_id}/',
-  'last_updated' : '2021-11-17'
-}
+base: https://fantasy.premierleague.com/api/entry/teamid/event/gameweek/picks/
+fixtures: https://fantasy.premierleague.com/api/fixtures/
+fpl_url: https://fantasy.premierleague.com/api/bootstrap-static/
+last_updated: '2021-11-17'
+mini_league: ' https://fantasy.premierleague.com/api/element-summary/{element_id}/'
+player_info: ' https://fantasy.premierleague.com/api/element-summary/{element_id}/'
+team_url: https://fantasy.premierleague.com/api/entry/team_id/event/game_week/picks/
