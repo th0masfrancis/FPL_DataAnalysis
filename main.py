@@ -22,12 +22,21 @@ def get_fpl_data():
         print("Fetching player data from fpl website")
         r = requests.get(config['fpl_url'])
         json_file = r.json()
+
         with open('datadump.json','w+') as j:
             json.dump(json_file, j)
+
+        # Update the config
+        config['last_updated'] = str(date.today())
+        with open('config.yaml', 'w') as f:
+            yaml.dump(config, f)
+
     else:
         print("Fetching player data from jsondump")
         with open('datadump.json') as j:
             json_file = json.load(j)
+
+
 
     elements_df = pd.DataFrame(json_file['elements'])
     element_types_df = pd.DataFrame(json_file['element_types'])
