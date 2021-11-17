@@ -6,5 +6,6 @@
   'base':  'https://fantasy.premierleague.com/api/entry/teamid/event/gameweek/picks/',
   'fixtures': 'https://fantasy.premierleague.com/api/fixtures/',
   'player_info' : ' https://fantasy.premierleague.com/api/element-summary/{element_id}/',
-  'mini_league' : ' https://fantasy.premierleague.com/api/element-summary/{element_id}/'
+  'mini_league' : ' https://fantasy.premierleague.com/api/element-summary/{element_id}/',
+  'last_updated' : '2021-11-17'
 }

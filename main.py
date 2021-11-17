@@ -4,6 +4,9 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import json
+from datetime import date
+
 
 # setting options
 pd.set_option('mode.chained_assignment', None)
@@ -14,11 +17,21 @@ plt.figure()
 def get_fpl_data():
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
+
+    if config['last_updated'] != str(date.today()):
+        print("Fetching player data from fpl website")
         r = requests.get(config['fpl_url'])
-    json = r.json()
-    elements_df = pd.DataFrame(json['elements'])
-    element_types_df = pd.DataFrame(json['element_types'])
-    teams_df = pd.DataFrame(json['teams'])
+        json_file = r.json()
+        with open('datadump.json','w+') as j:
+            json.dump(json_file, j)
+    else:
+        print("Fetching player data from jsondump")
+        with open('datadump.json') as j:
+            json_file = json.load(j)
+
+    elements_df = pd.DataFrame(json_file['elements'])
+    element_types_df = pd.DataFrame(json_file['element_types'])
+    teams_df = pd.DataFrame(json_file['teams'])
     return elements_df, element_types_df, teams_df
 
 
