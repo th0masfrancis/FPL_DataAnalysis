@@ -106,6 +106,16 @@ def get_player_type_df(all_players, player_type):
     return player_type_df
 
 
+def get_player_info(player_id):
+    with open('config.yaml') as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+    url = config['player_info'].replace('{element_id}', str(player_id))
+
+    r = requests.get(url)
+    json = r.json()
+    return pd.DataFrame(json['history'])
+
+
 def main():
     # get data from FPL website
     players_df, player_types_df, teams_df = get_fpl_data()
@@ -142,7 +152,33 @@ def main():
     # Plot
 
     # plot_data(my_team)
-    plot_data(main_df_defenders)
+    # plot_data(main_df_midfielders)
+    print(get_player_info(1))
+
+    # Create a dataframe with all players weekly history len(main_df)
+    main_history_df = pd.DataFrame()
+    for player_id in my_team['id']:
+        main_history_df = main_history_df.append(get_player_info(player_id))
+    # Add names of the players
+    main_history_df['web_name'] = main_history_df.element.map(main_df.set_index('id').web_name)
+    main_history_df['opponent_team'] = main_history_df.opponent_team.map(teams_df.set_index('id').short_name)
+    main_history_df.to_csv('player_history.csv')
+
+    # print(main_history_df[df_filters['player_info_short']])
+
+    result_df = main_history_df.groupby('web_name', as_index=False)['total_points'].aggregate([np.mean, np.std])
+    result_df.reset_index(inplace=True)
+    sns.regplot(data=result_df,x='std',y='mean')
+    print (result_df)
+
+
+    plt.show()
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
