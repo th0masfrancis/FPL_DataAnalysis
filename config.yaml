@@ -1,7 +1,7 @@
 base: https://fantasy.premierleague.com/api/entry/teamid/event/gameweek/picks/
 fixtures: https://fantasy.premierleague.com/api/fixtures/
 fpl_url: https://fantasy.premierleague.com/api/bootstrap-static/
-last_updated: '2021-11-17'
+last_updated: '2021-11-18'
 mini_league: ' https://fantasy.premierleague.com/api/element-summary/{element_id}/'
 player_info: ' https://fantasy.premierleague.com/api/element-summary/{element_id}/'
 team_url: https://fantasy.premierleague.com/api/entry/team_id/event/game_week/picks/
