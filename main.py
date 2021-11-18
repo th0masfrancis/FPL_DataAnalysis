@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import json
 from datetime import date
 
-
 # setting options
 pd.set_option('mode.chained_assignment', None)
 sns.set()
@@ -23,7 +22,7 @@ def get_fpl_data():
         r = requests.get(config['fpl_url'])
         json_file = r.json()
 
-        with open('datadump.json','w+') as j:
+        with open('datadump.json', 'w+') as j:
             json.dump(json_file, j)
 
         # Update the config
@@ -35,8 +34,6 @@ def get_fpl_data():
         print("Fetching player data from jsondump")
         with open('datadump.json') as j:
             json_file = json.load(j)
-
-
 
     elements_df = pd.DataFrame(json_file['elements'])
     element_types_df = pd.DataFrame(json_file['element_types'])
@@ -142,14 +139,10 @@ def main():
     # Get player history
     # Calculate average points and standard deviation
 
-
-
-
-
     # Plot
 
     # plot_data(my_team)
-    plot_data(main_df_midfielders)
+    plot_data(main_df_defenders)
 
 
 if __name__ == '__main__':
