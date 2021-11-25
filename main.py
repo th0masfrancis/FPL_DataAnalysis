@@ -151,11 +151,12 @@ def main():
 
     # Plot
 
-    plot_data(my_team)
+    # plot_data(my_team)
     # plot_data(main_df_midfielders)
 
     # Create a dataframe with all players weekly history len(main_df)
     main_history_df = pd.DataFrame()
+
     for player_id in main_df_forwards['id']:
         main_history_df = main_history_df.append(get_player_info(player_id))
     # Add names of the players
