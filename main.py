@@ -143,26 +143,28 @@ def main():
     main_df_defenders = get_player_type_df(main_df, 'Defender')
     main_df_goalkeepers = get_player_type_df(main_df, 'Goalkeeper')
 
+
+    ##### Make this a funcation ##### add_mean and std
     # Create a dataframe with all players weekly history len(main_df)
     main_history_df = pd.DataFrame()
 
-    for player_id in main_df['id']:
+    for player_id in my_team['id']:
         main_history_df = main_history_df.append(get_player_info(player_id))
     # Add names of the players
-    # main_history_df['web_name'] = main_history_df.element.map(main_df.set_index('id').web_name)
+    main_history_df['web_name'] = main_history_df.element.map(main_df.set_index('id').web_name)
     main_history_df['opponent_team'] = main_history_df.opponent_team.map(teams_df.set_index('id').short_name)
     main_history_df.to_csv('player_history.csv')
 
-    # print(main_history_df[df_filters['player_info_short']])
+    print(main_history_df[df_filters['player_info_short']])
 
     # Mean and td calculation
-    result_df = main_history_df.groupby('element', as_index=False)['total_points'].aggregate([np.mean, np.std])
+    result_df = main_history_df.groupby('web_name', as_index=False)['total_points'].aggregate([np.mean, np.std])
     result_df.reset_index(inplace=True)
     plot_data(result_df,x='std',y='mean')
     print (result_df)
 
-    main_df.merge(result_df,on='id',how='left')
-    print(main_df.columns)
+    my_team = my_team.merge(result_df,on='web_name',how='left')
+    print(main_df)
 
 
     plt.show()
