@@ -107,6 +107,7 @@ def get_player_type_df(all_players, player_type):
 
 
 def get_player_info(player_id):
+    # TODO add a section to check player history csv if last update is today
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     url = config['player_info'].replace('{element_id}', str(player_id))
