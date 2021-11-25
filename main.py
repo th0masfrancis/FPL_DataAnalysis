@@ -79,7 +79,7 @@ def data_preprocessing_my_team(my_fpl_team, main_df):
     return my_fpl_team
 
 
-def get_my_team(game_week=10, team_id=296501):
+def get_my_team(game_week=12, team_id=296501):
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
 
@@ -95,7 +95,7 @@ def plot_data(my_team, y='total_points', x='now_cost'):
     ax = sns.regplot(data=my_team, x=x, y=y, label='element_type')
     print(my_team.columns)
     for i in range(len(my_team)):
-        plt.text(x=my_team.now_cost[i], y=my_team.total_points[i], s=my_team.web_name[i])
+        plt.text(x=my_team.loc[i,x], y=my_team.loc[i,y], s=my_team.loc[i,'web_name'])
     plt.show()
 
 
@@ -151,13 +151,12 @@ def main():
 
     # Plot
 
-    # plot_data(my_team)
+    plot_data(my_team)
     # plot_data(main_df_midfielders)
-    print(get_player_info(1))
 
     # Create a dataframe with all players weekly history len(main_df)
     main_history_df = pd.DataFrame()
-    for player_id in my_team['id']:
+    for player_id in main_df_forwards['id']:
         main_history_df = main_history_df.append(get_player_info(player_id))
     # Add names of the players
     main_history_df['web_name'] = main_history_df.element.map(main_df.set_index('id').web_name)
@@ -166,17 +165,19 @@ def main():
 
     # print(main_history_df[df_filters['player_info_short']])
 
+    # Mean and td calculation
     result_df = main_history_df.groupby('web_name', as_index=False)['total_points'].aggregate([np.mean, np.std])
     result_df.reset_index(inplace=True)
-    sns.regplot(data=result_df,x='std',y='mean')
+    plot_data(result_df,x='std',y='mean')
     print (result_df)
+    plot_data(main_df_defenders)
+    plot_data(main_df_goalkeepers)
+    plot_data(main_df_midfielders)
+    plot_data(main_df_forwards)
+
 
 
     plt.show()
-
-
-
-
 
 
 
