@@ -119,6 +119,7 @@ def get_player_info(player_id):
 def main():
     # get data from FPL website
     players_df, player_types_df, teams_df = get_fpl_data()
+    my_team = get_my_team()
 
     # Load the filters that needs to be applied on FPL data, from df_filter.yaml
     df_filters = get_filters()
@@ -128,54 +129,40 @@ def main():
 
     # Pre-process the filtered data
     main_df = data_preprocessing(main_df, player_types_df, teams_df)
-
-    print(main_df[df_filters['player_filter_short']])
+    my_team = data_preprocessing_my_team(my_team, main_df)
 
     position_group = np.round(
         main_df.groupby('element_type', as_index=False).aggregate({'value_season': np.mean, 'total_points': np.mean}),
         2)
     print(position_group.sort_values('value_season', ascending=False))
 
-    my_team = get_my_team()
-
     # Identify top 6 players in each element_type who provides maximum value
-    my_team = data_preprocessing_my_team(my_team, main_df)
     print(my_team[df_filters['player_filter_short']])
     main_df_forwards = get_player_type_df(main_df, 'Forward')
     main_df_midfielders = get_player_type_df(main_df, 'Midfielder')
     main_df_defenders = get_player_type_df(main_df, 'Defender')
     main_df_goalkeepers = get_player_type_df(main_df, 'Goalkeeper')
 
-    # Get player history
-    # Calculate average points and standard deviation
-
-    # Plot
-
-    # plot_data(my_team)
-    # plot_data(main_df_midfielders)
-
     # Create a dataframe with all players weekly history len(main_df)
     main_history_df = pd.DataFrame()
 
-    for player_id in main_df_forwards['id']:
+    for player_id in main_df['id']:
         main_history_df = main_history_df.append(get_player_info(player_id))
     # Add names of the players
-    main_history_df['web_name'] = main_history_df.element.map(main_df.set_index('id').web_name)
+    # main_history_df['web_name'] = main_history_df.element.map(main_df.set_index('id').web_name)
     main_history_df['opponent_team'] = main_history_df.opponent_team.map(teams_df.set_index('id').short_name)
     main_history_df.to_csv('player_history.csv')
 
     # print(main_history_df[df_filters['player_info_short']])
 
     # Mean and td calculation
-    result_df = main_history_df.groupby('web_name', as_index=False)['total_points'].aggregate([np.mean, np.std])
+    result_df = main_history_df.groupby('element', as_index=False)['total_points'].aggregate([np.mean, np.std])
     result_df.reset_index(inplace=True)
     plot_data(result_df,x='std',y='mean')
     print (result_df)
-    plot_data(main_df_defenders)
-    plot_data(main_df_goalkeepers)
-    plot_data(main_df_midfielders)
-    plot_data(main_df_forwards)
 
+    main_df.merge(result_df,on='id',how='left')
+    print(main_df.columns)
 
 
     plt.show()
