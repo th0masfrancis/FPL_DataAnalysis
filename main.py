@@ -162,7 +162,7 @@ def main():
     print(result_df)
 
     my_team = my_team.merge(result_df, on='web_name', how='left')
-    print(main_df)
+    plot_data(my_team, x='points_per_game', y='mean')
 
     plt.show()
 
