@@ -79,7 +79,7 @@ def data_preprocessing_my_team(my_fpl_team, main_df):
     return my_fpl_team
 
 
-def get_my_team(game_week=12, team_id=296501):
+def get_my_team(game_week=17, team_id=296501):
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
 
@@ -95,7 +95,7 @@ def plot_data(my_team, y='total_points', x='now_cost'):
     ax = sns.regplot(data=my_team, x=x, y=y, label='element_type')
     print(my_team.columns)
     for i in range(len(my_team)):
-        plt.text(x=my_team.loc[i,x], y=my_team.loc[i,y], s=my_team.loc[i,'web_name'])
+        plt.text(x=my_team.loc[i, x], y=my_team.loc[i, y], s=my_team.loc[i, 'web_name'])
     plt.show()
 
 
@@ -107,11 +107,9 @@ def get_player_type_df(all_players, player_type):
 
 
 def get_player_info(player_id):
-    # TODO add a section to check player history csv if last update is today
     with open('config.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     url = config['player_info'].replace('{element_id}', str(player_id))
-
     r = requests.get(url)
     json = r.json()
     return pd.DataFrame(json['history'])
@@ -144,8 +142,7 @@ def main():
     main_df_defenders = get_player_type_df(main_df, 'Defender')
     main_df_goalkeepers = get_player_type_df(main_df, 'Goalkeeper')
 
-
-    ##### Make this a funcation ##### add_mean and std
+    ##### Make this a function ##### add_mean and std
     # Create a dataframe with all players weekly history len(main_df)
     main_history_df = pd.DataFrame()
 
@@ -161,16 +158,13 @@ def main():
     # Mean and td calculation
     result_df = main_history_df.groupby('web_name', as_index=False)['total_points'].aggregate([np.mean, np.std])
     result_df.reset_index(inplace=True)
-    plot_data(result_df,x='std',y='mean')
-    print (result_df)
+    plot_data(result_df, x='std', y='mean')
+    print(result_df)
 
-    my_team = my_team.merge(result_df,on='web_name',how='left')
+    my_team = my_team.merge(result_df, on='web_name', how='left')
     print(main_df)
 
-
     plt.show()
-
-
 
 
 if __name__ == '__main__':
